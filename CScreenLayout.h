@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+// RAP this is a test of git change management
+
 class CScreenLayout {
 	RECT m_rcClient;
 	TEXTMETRIC m_tm;

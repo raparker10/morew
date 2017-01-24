@@ -2,6 +2,8 @@
 // morew.cpp : Defines the entry point for the application.
 //
 
+// RAP This is a test of git change management
+
 #include "stdafx.h"
 #include "morew.h"
 #include "CCanvas.h"
