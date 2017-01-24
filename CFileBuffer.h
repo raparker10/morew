@@ -27,12 +27,16 @@ public:
 
 	bool Open(TCHAR *szFileName);
 	bool Close(void);
+
 	bool put_PageSize(int iNumberLines, int iLineSize);
 	inline int get_PageLines(void) const { return m_iNumberLines;  }
 	inline int get_PageColumns(void) const { return m_iLineSize;  }
+
 	bool get_Line(int iLine, _int64 *iPosition, unsigned char *szBuf, int *iLengthReturned) const;
+
 	inline bool Is64BitFile(void) const { return (m_iFileSize & 0xFFFFFFFF00000000) != 0; }
 	inline bool HasOpenFile(void) const { return m_fh != INVALID_HANDLE_VALUE; }
+
 	inline _int64 get_TopOfPagePos(void) const { return m_iTopOfPagePos;  }
 	inline _int64 get_FileSize(void) const { return m_iFileSize; }
 	inline DWORD get_LastError(void) const { return m_dwLastError; }

@@ -37,7 +37,7 @@ void CMoreScreenLayout::Resize(HWND hWnd)
 	m_rcFilePos.left = get_ClientRect()->left;
 	m_rcFilePos.right = 
 		get_ClientRect()->left 
-		+ m_fsh->get_FilePosChars()
+		+ m_fsh->get_FilePosWidthChars()
 		* get_PixelsPerChar();
 
 	// setup the hex display area

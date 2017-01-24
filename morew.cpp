@@ -265,7 +265,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	PAINTSTRUCT ps;
 	HDC hdc;
 	SCROLLINFO si;
-	LPCREATESTRUCT lpcs;
 	RECT rc;
 
 	switch (message)
@@ -814,21 +813,22 @@ bool open_file(TCHAR *szFName, HWND hWnd)
 		TCHAR szBuf[64];
 		swprintf_s(szBuf, _countof(szBuf), TEXT("Error %d opening file."), FileBuffer.get_LastError());
 		MessageBox(hWnd, szBuf, TEXT("Error Opening File"), MB_ICONERROR | MB_OK);
-
+		return false;
 	}
-	if (FileBuffer.Open(szFName))
+
+	// get the file size
+	FileLengthSizeHelper.put_FileSizeBytes(FileBuffer.get_FileSize());
+	set_display_width(hWnd, FileLengthSizeHelper.get_DefaultWidthChars());
+
+
+	// load the initial page of data from the file
+	if (FileBuffer.Refresh())
 	{
-		// get the file size
-		FileLengthSizeHelper.put_FileLength(FileBuffer.get_FileSize());
-
-		// load the initial page of data from the file
-		if (FileBuffer.Refresh())
-		{
-			// inform the Screen Layout object of the FileBuffer
-			ScreenLayout.put_FileBuffer(&FileBuffer, hWnd);
-			return true;
-		}
+		// inform the Screen Layout object of the FileBuffer
+		ScreenLayout.put_FileBuffer(&FileBuffer, hWnd);
+		return true;
 	}
+
 	// return false if any of the commands fail
 	return false;
 }

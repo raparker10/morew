@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CScreenLayout.h"
-extern class CFileBuffer;
+
+class CFileBuffer;
 
 // screen layout
 enum Section { HEADER, FILEPOS, HEXDISPLAY, CHARDISPLAY, UNKNOWN };
@@ -16,15 +17,8 @@ private:
 		m_rcHexDisplay, 
 		m_rcCharDisplay;
 
-	/*	static  TCHAR *m_sz32bitMask;
-	static  TCHAR *m_sz64bitMask;
-	static int CHARS_32_BIT_ADDRESS;
-	static int CHARS_64_BIT_ADDRESS;
-*/
 
-//	int m_iFilePosChars;
-	TCHAR *m_szFilePosMask;
-//	int m_iFilePosWidth;
+	int m_iFilePosChars;
 	POINT m_ptMaxSize, m_ptMinSize;
 	int m_iPixelsPerChar;
 	CFileLengthToSizeHelper *m_fsh;
@@ -53,15 +47,12 @@ public:
 	CMoreScreenLayout(CFileLengthToSizeHelper *fsh) : CScreenLayout(), 
 		m_iCharsPerLine(64), 
 		m_iLinesPerScreen(64), 
-//		m_iFilePosChars(2 * 8 + 2), 
-//		m_szFilePosMask(m_sz64bitMask), 
-//		m_iFilePosWidth(0),
 		m_fsh(fsh)
 	{ 
 		Initialzie(); 
 	}
 	virtual void Resize(HWND hWnd);
-	TCHAR *get_FilePosMask(void) { return m_szFilePosMask; }
+	TCHAR *get_FilePosMask(void) { return m_fsh->get_FilePosMask(); }
 
 	inline const RECT *get_FilePosPanel(void) const { return &m_rcFilePos; }
 	inline const RECT *get_HeaderPanel(void) const { return &m_rcHeader; }

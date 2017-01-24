@@ -146,7 +146,7 @@ bool CFileBuffer::Open(TCHAR *szFileName)
 	m_liCurrentFilePos.QuadPart = 0;
 	m_iTopOfPagePos = 0;
 
-	wcscpy(m_szFileName, szFileName);
+	wcscpy_s(m_szFileName, _countof(m_szFileName), szFileName);
 
 	return true;
 }
