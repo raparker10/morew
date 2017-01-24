@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-// RAP this is a test of git change management
+// RAP this is a test of git change management - again
 
 class CScreenLayout {
 	RECT m_rcClient;
