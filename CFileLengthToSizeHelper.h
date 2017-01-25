@@ -29,7 +29,8 @@ public:
 	}
 	int get_DefaultWidthChars(void) const
 	{
-		return (3 * (m_iClientWindowSize_X - m_iFilePosWidthPixels) / 4) / m_tm.tmAveCharWidth;
+		int chars = (3 * (m_iClientWindowSize_X - m_iFilePosWidthPixels) / 4) / (3 * m_tm.tmAveCharWidth);
+		return chars;
 
 	}
 	TCHAR *get_FilePosMask(void) { return m_szFilePosMask; }
