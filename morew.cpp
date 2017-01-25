@@ -527,7 +527,7 @@ void change_display_width(HWND hWnd, int iCharsDelta)
 // handle resizing the screen
 void handle_resize(HWND hWnd, HDC hdc, int iWidth, int iHeight)
 {
-	FileLengthSizeHelper.put_ClientWindowSize(iWidth, iHeight);
+	FileLengthSizeHelper.put_ClientWindowSizePixels(iWidth, iHeight);
 
 	// get the metrics of the font used for drawing
 	HGDIOBJ hOldFont = SelectObject(hdc, GetStockObject(ANSI_FIXED_FONT));
@@ -782,6 +782,7 @@ bool display_screen_db(HWND hWnd, HDC hdc, int iSingleLineNumber)
 	}
 	SelectObject(Canvas.hdcMem, hOldFont);
 
+#ifdef _DEBUG
 	// frame the various screen panels
 	HBRUSH hbr = CreateSolidBrush(RGB(255, 0, 0));
 	HBRUSH hbrOld = (HBRUSH)SelectObject(Canvas.hdcMem, (HGDIOBJ)hbr);
@@ -790,7 +791,7 @@ bool display_screen_db(HWND hWnd, HDC hdc, int iSingleLineNumber)
 	FrameRect(Canvas.hdcMem, ScreenLayout.get_HexPanel(), hbr);
 	FrameRect(Canvas.hdcMem, ScreenLayout.get_CharPanel(), hbr);
 	DeleteObject((HGDIOBJ)SelectObject(Canvas.hdcMem, (HGDIOBJ)hbrOld));
-
+#endif
 	// blt the bitmap into from the memory DC to the the client window DC
 	BitBlt(hdc, Canvas.rcMem.left, Canvas.rcMem.top, Canvas.rcMem.right - Canvas.rcMem.left, Canvas.rcMem.bottom - Canvas.rcMem.top, Canvas.hdcMem, 0, 0, SRCCOPY);
 
