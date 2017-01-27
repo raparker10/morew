@@ -6,7 +6,7 @@ quickly pushed the effort into a graphical UI with easy navigation,
 variable screen width.
 
 To use the program, select File | Open, select a file, and its contents
-will be displayed.  Use standard windows program interations to scroll 
+will be displayed.  Use standard windows program interactions to scroll 
 around the file.
 
 Commands
