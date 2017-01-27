@@ -66,6 +66,9 @@ To Do
 * enable displaying text files with proper pagination
 * create a search by character function
 * create a search by text function
+* enable a black and white mode (don't color the characters)
+* include a separator in the 32-bit file positions
+* extend hilight bar to include the address
 
 Known Bugs
 -------------------------------------------------------------------------------

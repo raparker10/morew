@@ -1,3 +1,12 @@
+
+//
+// CApplication
+//
+// This is a generic class that serves as the main class for a Windows application.
+// It provides application initialization, and message loop functionality.
+//
+
+
 class CApplication {
 	HWND m_hWnd;
 public:

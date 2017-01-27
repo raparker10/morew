@@ -41,6 +41,8 @@ bool CFileBuffer::Read(char *sBuf, DWORD iBytes, DWORD *iBytesRead = NULL)
 	return true;
 
 }
+
+// read a line from a specific location in the current file
 bool CFileBuffer::ReadLine(int iLine, _int64 iFilePos)
 {
 	if (Seek(iFilePos))
@@ -49,6 +51,8 @@ bool CFileBuffer::ReadLine(int iLine, _int64 iFilePos)
 	}
 	return false;
 }
+
+// read a page from a specific location in the file
 bool CFileBuffer::ReadPage(_int64 iFilePos)
 {
 	if (Seek(iFilePos))
@@ -58,6 +62,7 @@ bool CFileBuffer::ReadPage(_int64 iFilePos)
 	return false;
 }
 
+// allocate a buffer to hold a page worth of data
 bool CFileBuffer::AllocateBuffer(int iBufferSize)
 {
 	if (iBufferSize > m_iAllocatedBufferSize)
@@ -80,6 +85,7 @@ bool CFileBuffer::AllocateBuffer(int iBufferSize)
 	return m_sBuffer != NULL;
 }
 
+// initialize the object's variables
 void CFileBuffer::Initialize(void)
 {
 	m_fh = INVALID_HANDLE_VALUE;
@@ -95,6 +101,8 @@ void CFileBuffer::Initialize(void)
 	m_iNumberLines = 0;
 	m_szFileName[0] = 0;
 }
+
+// close the file
 bool CFileBuffer::Close(void)
 {
 	if (m_fh != INVALID_HANDLE_VALUE)
@@ -108,19 +116,26 @@ bool CFileBuffer::Close(void)
 	m_szFileName[0] = 0;
 	return true;
 }
+
+// free any used resources
 void CFileBuffer::Free(void)
 {
 	Close();
 }
+
+// Constructor
 CFileBuffer::CFileBuffer(void)
 {
 	Initialize();
 }
+
+// destructor
 CFileBuffer::~CFileBuffer(void)
 {
 	Free();
 }
 
+// open a new file
 bool CFileBuffer::Open(TCHAR *szFileName)
 {
 	Close();
@@ -128,14 +143,19 @@ bool CFileBuffer::Open(TCHAR *szFileName)
 	m_fh = CreateFile(szFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_READ_ATTRIBUTES, NULL);
 	if (m_fh == INVALID_HANDLE_VALUE)
 	{
+		// if the file open fails, save the error code
 		this->m_dwLastError = GetLastError();
+
+		// return failure
 		return false;
 	}
 
+	// determine the file length
 	LARGE_INTEGER liFileSize;
 	GetFileSizeEx(m_fh, &liFileSize);
-
 	m_iFileSize = liFileSize.QuadPart;
+
+	// determine the number of lines in the file
 	if (m_iLineSize <= 0)
 	{
 		m_iLinesPerFile = 0;
@@ -144,13 +164,19 @@ bool CFileBuffer::Open(TCHAR *szFileName)
 	{
 		m_iLinesPerFile = m_iFileSize / m_iLineSize;
 	}
+
+	// reset the current position to the top of the file
 	m_liCurrentFilePos.QuadPart = 0;
 	m_iTopOfPagePos = 0;
 
+	// save the file name
 	wcscpy_s(m_szFileName, _countof(m_szFileName), szFileName);
 
+	// return success
 	return true;
 }
+
+// set the number of rows and columns in the current display
 bool CFileBuffer::put_PageSize(int iNumberLines, int iLineSize)
 {
 	// there must be at least one line and one character
@@ -163,6 +189,7 @@ bool CFileBuffer::put_PageSize(int iNumberLines, int iLineSize)
 		m_iNumberLines = iNumberLines;
 		if (HasOpenFile())
 		{
+			// refresh the buffer with the new file size
 			return Refresh();
 		}
 		return true;
@@ -179,6 +206,8 @@ bool CFileBuffer::Refresh(void)
 	}
 	return false;
 }
+
+// move the file pointer to a new location via an offset
 bool CFileBuffer::MoveToPosition(_int64 iOffsetFromCurrent)
 {
 	// update the top-of-page file position
@@ -195,6 +224,7 @@ bool CFileBuffer::MoveToPosition(_int64 iOffsetFromCurrent)
 	return true;
 }
 
+// read one page before the current file location
 bool CFileBuffer::PageUp(void)
 {
 	if (MoveToPosition(-m_iBufferSize))
@@ -206,6 +236,8 @@ bool CFileBuffer::PageUp(void)
 	}
 	return false;
 }
+
+// read one page down from the current location
 bool CFileBuffer::PageDown(void)
 {
 	if (MoveToPosition(m_iBufferSize))
@@ -217,6 +249,8 @@ bool CFileBuffer::PageDown(void)
 	}
 	return false;
 }
+
+// read one line up from the current location
 bool CFileBuffer::LineUp(void)
 {
 	// scroll the buffer down one line and just read the first line in
@@ -233,6 +267,8 @@ bool CFileBuffer::LineUp(void)
 	return false;
 
 }
+
+// read one line down from the current location
 bool CFileBuffer::LineDown(void)
 {
 	// scroll the buffer down one line and just read the first line in
@@ -248,6 +284,8 @@ bool CFileBuffer::LineDown(void)
 	}
 	return false;
 }
+
+// read one chararacter before the current location
 bool CFileBuffer::MoveLeft(void)
 {
 	// scroll the buffer down one line and just read the first line in
@@ -263,6 +301,8 @@ bool CFileBuffer::MoveLeft(void)
 	}
 	return false;
 }
+
+// read one character after the current location
 bool CFileBuffer::MoveRight(void)
 {
 	// scroll the buffer down one line and just read the first line in
@@ -278,6 +318,8 @@ bool CFileBuffer::MoveRight(void)
 	}
 	return false;
 }
+
+// move to the top of the file
 bool CFileBuffer::MoveTop(void)
 {
 	if (MoveToPosition(0))
@@ -290,6 +332,7 @@ bool CFileBuffer::MoveTop(void)
 	return false;
 }
 
+// read one line from the file from a specified location
 bool CFileBuffer::get_Line(int iLine, _int64 *iPosition, unsigned char *szBuf, int *iLengthReturned) const
 {
 	// always terminate the buffer first

@@ -1,9 +1,23 @@
 #include "stdafx.h"
+
+//
+// CDrawingHelper
+//
+// Encapsulates functionality to facilitate drawing.
+//
+
+
 class CDrawingHelper {
 protected:
+
+	// screen size
 	int m_iClientWidthPixels, m_iClientHeightPixels;
+
+	// font information
 	TEXTMETRIC m_tmFixed;
 	TEXTMETRIC m_tmVariable;
+
+	// window information
 	HWND m_hWnd;
 
 public:
@@ -63,6 +77,14 @@ public:
 	}
 
 };
+
+// 
+// CMoreDrawingHelper
+//
+// Drawing helper class specific to the "Morew" file viewing application
+//
+//
+
 class CMoreDrawingHelper : public CDrawingHelper {
 	TEXTMETRIC m_tm;
 
@@ -110,12 +132,6 @@ public:
 	// get the file address width in pixels
 	int get_FilePosWidthPixels(void) { return get_FilePosWidthChars() * get_FixedTextMetric()->tmAveCharWidth; }
 
-	// save the Windows textmetrics of the selected font
-/*	void put_TextMetrics(TEXTMETRIC *tm) { 
-		memcpy(&m_tm, tm, sizeof(m_tm)); 
-		m_iFilePosWidthPixels = m_iFilePosWidthChars * m_tm.tmAveCharWidth;
-	}
-*/
 	// save the size of the file being viewed
 	void put_FileSizeBytes(_int64 iFileSizeBytes) { 
 		m_iFileSizeBytes = iFileSizeBytes;  

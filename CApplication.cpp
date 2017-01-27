@@ -1,14 +1,18 @@
 #include "stdafx.h"
 
+// constructor
 CApplication::CApplication()
 {
 
 }
+
+// destructor
 CApplication::~CApplication()
 {
 
 }
 
+// windows message handling
 LRESULT CALLBACK CApplication::MessageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
@@ -79,6 +83,7 @@ LRESULT CALLBACK CApplication::MessageProc(HWND hWnd, UINT message, WPARAM wPara
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
+
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}

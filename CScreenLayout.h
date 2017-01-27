@@ -1,6 +1,10 @@
 #include "stdafx.h"
 
-// RAP this is a test of git change management - again
+// 
+// CScreenLayout
+//
+// Manages the layout of the screen
+//
 
 class CScreenLayout {
 	RECT m_rcClient;

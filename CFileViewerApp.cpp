@@ -8,7 +8,6 @@ const int HEADER_LINES = 3;
 // about dialog box information
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
-
 // Constructor.
 CFileViewerApp::CFileViewerApp()
 {
@@ -139,10 +138,33 @@ bool CFileViewerApp::handle_command(HWND hWnd, int wmID, int wmEvent)
 	return true;
 
 }
+
+// handle keydown messages
 bool CFileViewerApp::handle_keydown(HWND hWnd, int iVKey) 
 { 
-	return false; 
+	switch (iVKey)
+	{
+	case VK_NEXT:
+		handle_page_down(hWnd);
+		return 0;
+
+	case VK_PRIOR:
+		handle_page_up(hWnd);
+		return 0;
+
+	case VK_HOME:
+		move_absolute(0, 0, 0);
+		InvalidateRect(hWnd, NULL, TRUE);
+		return 0;
+
+	default:
+		return false;
+	}
+
+	return true;
 }
+
+// handle character messages
 bool CFileViewerApp::handle_char(HWND hWnd, int iChar) 
 { 
 	switch (iChar)
@@ -193,14 +215,16 @@ bool CFileViewerApp::handle_char(HWND hWnd, int iChar)
 		return false;
 	}
 
+	// if a character was handled then update the screen and scrollbar
 	InvalidateRect(hWnd, NULL, TRUE);
 	update_scrollbar(hWnd);
 	return true;
 }
+
+// handle messages from the vertical scrollbar
 bool CFileViewerApp::handle_vscroll(HWND hWnd, int iScrollRequest, int iScrollPosition) 
 { 
 	SCROLLINFO si;
-
 
 	// get the vertical scroll bar information
 	si.cbSize = sizeof(si);
@@ -248,13 +272,20 @@ bool CFileViewerApp::handle_vscroll(HWND hWnd, int iScrollRequest, int iScrollPo
 		break;
 
 	default:
+		// return the message was not handled
 		return false;
 
 	}
+
+	// update the screen and scroll bar if a message was handled
 	InvalidateRect(hWnd, NULL, TRUE);
 	update_scrollbar(hWnd);
+
+	// return the message was handled
 	return true;
 }
+
+// handle a window resize message
 bool CFileViewerApp::handle_size(HWND hWnd, HDC hdc, int iWidth, int iHeight) 
 { 
 	// save the window cliend size
@@ -263,17 +294,24 @@ bool CFileViewerApp::handle_size(HWND hWnd, HDC hdc, int iWidth, int iHeight)
 	// determine the default number of characters to display
 	int iDefaultWidth = DrawHelper.get_DefaultWidthChars();
 
+	// RAP: this functionality should be added to DrawHelper
 	int iBorderLeft = 1, iBorderTop = 1, iBorderRight = 0, iBorderBottom = 0;
 	DrawInfo.iPixelsPerLine = DrawHelper.get_FixedTextMetric()->tmHeight + iBorderTop + iBorderBottom;
 	DrawInfo.iPixelsPerChar = DrawHelper.get_FixedTextMetric()->tmAveCharWidth;
 	DrawInfo.iPixelsPerBorderedChar = DrawHelper.get_FixedTextMetric()->tmAveCharWidth + iBorderRight + iBorderLeft;
 
+	//RAP this is known at startup and should be moved there
 	ScreenLayout.put_PixelsPerChar(DrawInfo.iPixelsPerChar);
 
-
+	// resize the screen panels
 	ScreenLayout.Resize(hWnd);
+
+	// resize the file buffer to match the screen
 	FileBuffer.put_PageSize(ScreenLayout.get_LinesPerScreen(), ScreenLayout.get_CharsPerLine());
 
+	//
+	// update the double buffer for the new screen size
+	//
 	SCROLLINFO si;
 	si.cbSize = sizeof(si);
 	si.fMask = SIF_RANGE;
@@ -293,27 +331,37 @@ bool CFileViewerApp::handle_size(HWND hWnd, HDC hdc, int iWidth, int iHeight)
 	Canvas.hdcMem = CreateCompatibleDC(hdc);
 	Canvas.hbmMem = CreateCompatibleBitmap(hdc, Canvas.rcMem.right - Canvas.rcMem.left, Canvas.rcMem.bottom - Canvas.rcMem.top);
 	Canvas.hbmMemOld = (HBITMAP)SelectObject(Canvas.hdcMem, Canvas.hbmMem);
+	
+	// return that the message was handled
 	return true;
 }
+
+// handle a mouse move
 bool CFileViewerApp::handle_mousemove(HWND hWnd, WPARAM wParam, WORD x, WORD y) 
 { 
 	HDC hdc = GetDC(hWnd);
+
+	// compare the new line position to the previous line position...
 	int iOldLine = Cursor.cur_line;
 
 	// get the mouse VERTICAL position
 	get_position(x, y, &Cursor.cur_Section, &Cursor.cur_line, &Cursor.cur_column);
 
-	// unhilight the previous line
+	//... and hilight the new line if it is different from the previous line
 	if (iOldLine != Cursor.cur_line)
 	{
+		// unhilight the previous line
 		display_line(hWnd, hdc, FileBuffer.get_fh(), ScreenLayout.get_CharsPerLine(), iOldLine, false);
+		// hilight the new line
 		display_line(hWnd, hdc, FileBuffer.get_fh(), ScreenLayout.get_CharsPerLine(), Cursor.cur_line, true);
 	}
 
+	// display the neader with updated position information
 	display_header(hdc, ScreenLayout.get_CharsPerLine());
 	return true;
 }
 
+// change the number of characters that are displayed on each line to an exact number
 void CFileViewerApp::set_display_width(HWND hWnd, int iDisplayWidthChars)
 {
 	FileBuffer.put_PageSize(FileBuffer.get_PageLines(), iDisplayWidthChars);
@@ -321,19 +369,18 @@ void CFileViewerApp::set_display_width(HWND hWnd, int iDisplayWidthChars)
 	FileBuffer.Refresh();
 	InvalidateRect(hWnd, NULL, TRUE);
 }
+
 // increase or decrease the number of columns displayed per line
 void CFileViewerApp::change_display_width(HWND hWnd, int iCharsDelta)
 {
 	set_display_width(hWnd, FileBuffer.get_PageColumns() + iCharsDelta);
 }
 
-
 // close the current file
 bool CFileViewerApp::close_current_file(void)
 {
 	return FileBuffer.Close();
 }
-
 
 // draw one line to a drawing contect (in this program, it will be the HDC of the double buffer)
 void CFileViewerApp::draw_line(HDC hdc, int x, int y, LONG lPosHigh, DWORD dwPosLow, unsigned char * szReadLineBuffer, int iBytesRead, int iCharactersPerLine)
@@ -535,7 +582,7 @@ bool CFileViewerApp::display_screen_db(HWND hWnd, HDC hdc)
 	SelectObject(Canvas.hdcMem, hOldFont);
 
 #ifdef _DEBUG
-	// frame the various screen panels
+	// frame the various screen panels to help with debugging drawing commands
 	HBRUSH hbr = CreateSolidBrush(RGB(255, 0, 0));
 	HBRUSH hbrOld = (HBRUSH)SelectObject(Canvas.hdcMem, (HGDIOBJ)hbr);
 	FrameRect(Canvas.hdcMem, ScreenLayout.get_HeaderPanel(), hbr);
@@ -550,12 +597,6 @@ bool CFileViewerApp::display_screen_db(HWND hWnd, HDC hdc)
 	retval = true;
 	return retval;
 }
-
-
-
-
-
-
 
 // open a new file for display
 bool CFileViewerApp::open_file(TCHAR *szFName, HWND hWnd)
@@ -617,7 +658,7 @@ bool CFileViewerApp::move_position(LARGE_INTEGER liPosition)
 	return false;
 }
 
-// move the a specific page, line, and characte
+// move the a specific page, line, and character
 bool CFileViewerApp::move_absolute(__int64 iPage, __int64 iLine, __int64 iChar)
 {
 	LARGE_INTEGER liNewFilePos;

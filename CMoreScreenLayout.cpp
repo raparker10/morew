@@ -48,18 +48,5 @@ void CMoreScreenLayout::Resize(HWND hWnd)
 // inform the layout object about the file to be displayed
 void CMoreScreenLayout::put_FileBuffer(CFileBuffer *fb, HWND hWnd)
 {
-/* RAP
-	if (fb->Is64BitFile())
-	{
-		m_szFilePosMask = m_sz64bitMask;
-		m_iFilePosChars = CHARS_64_BIT_ADDRESS;
-	}
-	else
-	{
-		m_szFilePosMask = m_sz32bitMask;
-		m_iFilePosChars = CHARS_32_BIT_ADDRESS;
-	}
-*/
-//	m_iFilePosWidth = m_iPixelsPerChar * m_iFilePosChars;
 	Resize(hWnd);
 }
