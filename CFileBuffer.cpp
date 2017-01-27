@@ -93,6 +93,7 @@ void CFileBuffer::Initialize(void)
 	m_iLineSize = 0;
 	m_iLinesPerFile = 0;
 	m_iNumberLines = 0;
+	m_szFileName[0] = 0;
 }
 bool CFileBuffer::Close(void)
 {

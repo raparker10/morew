@@ -1,15 +1,6 @@
 #include "stdafx.h"
 
 
-int CMoreScreenLayout::get_DefaultCharsPerLine(const int iClientWidth) const
-{
-	// determines the best number of characters per line
-	// given the current screen size, pixels per character, and
-	// other overhead
-
-//RAP !!!	return (3 * (iClientWidth - m_iFilePosWidth) / 4) / m_iPixelsPerChar;
-	return 0; // RAP !
-}
 // adjust the size and location of screen display panels based on a new client window size
 void CMoreScreenLayout::Resize(HWND hWnd)
 {

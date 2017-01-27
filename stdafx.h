@@ -23,9 +23,11 @@
 
 
 // TODO: reference additional headers your program requires here
-// #include "CFileBuffer.h"
-// #include "CScreenLayout.h"
 #include "CFileLengthToSizeHelper.h"
 #include "CFileBuffer.h"
 #include "CMoreScreenLayout.h"
+#include "CCanvas.h"
+#include "Resource.h"
+#include "CApplication.h"
+#include "CFileViewerApp.h"
 

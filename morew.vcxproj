@@ -79,9 +79,11 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CApplication.h" />
     <ClInclude Include="CCanvas.h" />
     <ClInclude Include="CFileBuffer.h" />
     <ClInclude Include="CFileLengthToSizeHelper.h" />
+    <ClInclude Include="CFileViewerApp.h" />
     <ClInclude Include="CMoreScreenLayout.h" />
     <ClInclude Include="CScreenLayout.h" />
     <ClInclude Include="morew.h" />
@@ -90,8 +92,10 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CApplication.cpp" />
     <ClCompile Include="CFileBuffer.cpp" />
     <ClCompile Include="CFileLengthToSizeHelper.cpp" />
+    <ClCompile Include="CFileViewerApp.cpp" />
     <ClCompile Include="CMoreScreenLayout.cpp" />
     <ClCompile Include="CScreenLayout.cpp" />
     <ClCompile Include="morew.cpp" />

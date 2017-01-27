@@ -4,7 +4,6 @@
 class CFileBuffer;
 
 // screen layout
-enum Section { HEADER, FILEPOS, HEXDISPLAY, CHARDISPLAY, UNKNOWN };
 const int SCROLL_RANGE = 1000;
 
 
@@ -21,7 +20,7 @@ private:
 	int m_iFilePosChars;
 	POINT m_ptMaxSize, m_ptMinSize;
 	int m_iPixelsPerChar;
-	CFileLengthToSizeHelper *m_fsh;
+	CMoreDrawingHelper *m_fsh;
 
 	void Initialzie(void) { 
 		m_ptMinSize.x = 1; 
@@ -42,15 +41,18 @@ public:
 
 	inline int get_CharsPerLine(void) const { return m_iCharsPerLine; }
 	inline int get_LinesPerScreen(void) const { return m_iLinesPerScreen; }
-	int get_DefaultCharsPerLine(const int iClientWidth) const;
 
-	CMoreScreenLayout(CFileLengthToSizeHelper *fsh) : CScreenLayout(), 
+	CMoreScreenLayout() : CScreenLayout(),
 		m_iCharsPerLine(64), 
-		m_iLinesPerScreen(64), 
-		m_fsh(fsh)
+		m_iLinesPerScreen(64)
 	{ 
 		Initialzie(); 
 	}
+	void put_DrawingHelper(CMoreDrawingHelper *fsh)
+	{
+		m_fsh = fsh;
+	}
+	CMoreDrawingHelper *get_DrawingHelper(void) { return m_fsh; }
 	virtual void Resize(HWND hWnd);
 	TCHAR *get_FilePosMask(void) { return m_fsh->get_FilePosMask(); }
 

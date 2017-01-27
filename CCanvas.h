@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#pragma once
 
 // double buffering variables
 class CCanvas {

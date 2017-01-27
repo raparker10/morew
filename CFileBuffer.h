@@ -43,7 +43,11 @@ public:
 
 	inline HANDLE get_fh(void) const { return m_fh;  }
 	bool Seek(_int64 iNewFilePos);
-	TCHAR *get_FileName(TCHAR *szFileName, size_t bufsize) const { wcscpy_s(szFileName, bufsize, m_szFileName); return szFileName; }
+	TCHAR *get_FileName(TCHAR *szFileName, size_t bufsize) const 
+	{ 
+		wcscpy_s(szFileName, bufsize, m_szFileName); 
+		return szFileName; 
+	}
 
 	bool Refresh(void);
 	bool PageUp(void);
