@@ -9,39 +9,20 @@ const int HEADER_LINES = 3;
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 
 
+// Constructor.
 CFileViewerApp::CFileViewerApp()
 {
+	// Initialize the ScreenLayout
 	ScreenLayout.put_DrawingHelper(&DrawHelper);
 }
+
+// Destructor
 CFileViewerApp::~CFileViewerApp()
 {
 
 }
 
-LRESULT CALLBACK CFileViewerApp::MessageProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-/*bool CFileViewerApp::handle_size(HWND hWnd) 
-{ 
-	HDC hdc = GetDC(hWnd);
-	int iOldLine = Cursor.cur_line;
-
-	// get the mouse VERTICAL position
-	get_position(x, y, &Cursor.cur_Section, &Cursor.cur_line, &Cursor.cur_column);
-
-	// unhilight the previous line
-	if (iOldLine != Cursor.cur_line)
-	{
-		display_line(hWnd, hdc, FileBuffer.get_fh(), ScreenLayout.get_CharsPerLine(), iOldLine, false);
-		display_line(hWnd, hdc, FileBuffer.get_fh(), ScreenLayout.get_CharsPerLine(), Cursor.cur_line, true);
-	}
-
-	display_header(hdc, ScreenLayout.get_CharsPerLine());
-	return true;
-}
-*/
+// repaint the screen from the double-buffer
 bool CFileViewerApp::handle_paint(HWND hWnd, HDC hdc, LPPAINTSTRUCT ps)
 {
 	if (FileBuffer.HasOpenFile())
@@ -52,6 +33,7 @@ bool CFileViewerApp::handle_paint(HWND hWnd, HDC hdc, LPPAINTSTRUCT ps)
 	return true;
 }
 
+// handle the WM_CREATE message by initializing environment information
 bool CFileViewerApp::handle_create(HWND hWnd, LPCREATESTRUCT *lpcs) 
 { 
 	TEXTMETRIC tm;
@@ -73,12 +55,16 @@ bool CFileViewerApp::handle_create(HWND hWnd, LPCREATESTRUCT *lpcs)
 	SelectObject(hdc, hOldFont);
 	return 0;
 }
+
+// handle the WM_COMMAND message 
 bool CFileViewerApp::handle_command(HWND hWnd, int wmID, int wmEvent) 
 { 
 	TCHAR szFileName[_MAX_PATH + 1];
 	// Parse the menu selections:
 	switch (wmID)
 	{
+
+	// open a new file
 	case IDM_FILE_OPEN:
 		szFileName[0] = 0;
 		handle_file_selection(szFileName, _countof(szFileName));
@@ -86,59 +72,70 @@ bool CFileViewerApp::handle_command(HWND hWnd, int wmID, int wmEvent)
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;
 
+	// display more characters per line
 	case IDM_VIEW_WIDER:
 		change_display_width(hWnd, 1);
 		update_scrollbar(hWnd);
 		break;
 
+	// dieplay fewer characters per line
 	case IDM_VIEW_NARROWER:
 		change_display_width(hWnd, -1);
 		update_scrollbar(hWnd);
 		break;
 
+	// go to the top of the file
 	case IDM_VIEW_GO_TOP:
 		move_absolute(0, 0, 0);
 		update_scrollbar(hWnd);
 		break;
 
+	// display one line farther down the file
 	case IDM_VIEW_LINE_DOWN:
 		handle_move_down(hWnd);
 		update_scrollbar(hWnd);
 		break;
 
+	// display starting from one line earlier in the file
 	case IDM_VIEW_LINE_UP:
 		handle_move_up(hWnd);
 		update_scrollbar(hWnd);
 		break;
 
+	// RAP: display one page offset from current location
 	case IDM_VIEW_PAGE_DOWN:
 	case IDM_VIEW_PAGE_UP:
 		break;
 
+	// shift the display one character to the left
 	case IDM_VIEW_SHIFT_LEFT:
 		move_relative(0, 0, -1);
 		update_scrollbar(hWnd);
 		break;
 
+	// shift the display one character to the right
 	case IDM_VIEW_SHIFT_RIGHT:
 		move_relative(0, 0, 1);
 		update_scrollbar(hWnd);
 		break;
 
-
+	// display the "About" dialog box
 	case IDM_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
 		break;
 
+	// exit the application
 	case IDM_EXIT:
 		close_current_file();
 		DestroyWindow(hWnd);
 		break;
 
 	default:
+		// indicate that the command was not handled
 		return false;
 	}
 
+	// indicate that the command was handled
 	return true;
 
 }

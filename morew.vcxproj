@@ -82,7 +82,7 @@
     <ClInclude Include="CApplication.h" />
     <ClInclude Include="CCanvas.h" />
     <ClInclude Include="CFileBuffer.h" />
-    <ClInclude Include="CFileLengthToSizeHelper.h" />
+    <ClInclude Include="CDrawingHelper.h" />
     <ClInclude Include="CFileViewerApp.h" />
     <ClInclude Include="CMoreScreenLayout.h" />
     <ClInclude Include="CScreenLayout.h" />
@@ -94,7 +94,7 @@
   <ItemGroup>
     <ClCompile Include="CApplication.cpp" />
     <ClCompile Include="CFileBuffer.cpp" />
-    <ClCompile Include="CFileLengthToSizeHelper.cpp" />
+    <ClCompile Include="CDrawingHelper.cpp" />
     <ClCompile Include="CFileViewerApp.cpp" />
     <ClCompile Include="CMoreScreenLayout.cpp" />
     <ClCompile Include="CScreenLayout.cpp" />

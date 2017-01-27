@@ -1,62 +1,73 @@
-========================================================================
-    WIN32 APPLICATION : morew Project Overview
-========================================================================
+MOREW.EXE - "More" for Windows
 
-AppWizard has created this morew application for you.
+This project began as an effort to prrovide "more"-like functionality for 
+Windows, but the need for quickly examining large (64-bit length) files 
+quickly pushed the effort into a graphical UI with easy navigation, 
+variable screen width.
 
-This file contains a summary of what you will find in each of the files that
-make up your morew application.
+To use the program, select File | Open, select a file, and its contents
+will be displayed.  Use standard windows program interations to scroll 
+around the file.
+
+Commands
+File | Open
+View | Go to Top
+View | Line Down
+View | Line Up
+View | Page Down
+View | Page Up
+View | Narrower
+View | Wider
+Help | About
 
 
-morew.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
+CApplication.cpp / .h
+A generic application class.  Used as the basis for CFileViewerApp.cpp / .h
 
-morew.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
+CCanvas.cpp / .h
+A canvas object used for double-buffering the screen.
 
-morew.cpp
-    This is the main application source file.
+CFileBuffer.cpp / .h
+Manages file handling operations.
 
-/////////////////////////////////////////////////////////////////////////////
-AppWizard has created the following resources:
+CDrawingHelper.cpp / .h
+Implements functionality for shared drawing information and functions.
 
-morew.rc
-    This is a listing of all of the Microsoft Windows resources that the
-    program uses.  It includes the icons, bitmaps, and cursors that are stored
-    in the RES subdirectory.  This file can be directly edited in Microsoft
-    Visual C++.
+CFileViewerApp.cpp / .h
+The application class for this program.  Derived from CApplication
+
+CMoreScreenLayout.cpp / .h
+Stores information for the screen layout.  Derived from the generic CScreenLayout.
+
+CScreenLayout.cpp / .h
+A generic class for holding screen layout information.
+
+morew.cpp / .h
+Application entry point.  Initializes main application object and window.
 
 Resource.h
-    This is the standard header file, which defines new resource IDs.
-    Microsoft Visual C++ reads and updates this file.
+Contains values for resource identifiers.
 
-morew.ico
-    This is an icon file, which is used as the application's icon (32x32).
-    This icon is included by the main resource file morew.rc.
+stdafx.cpp / .h
+Microsoft Visual Studio pre-compiled header suppport.
 
-small.ico
-    This is an icon file, which contains a smaller version (16x16)
-    of the application's icon. This icon is included by the main resource
-    file morew.rc.
+To Do
+-------------------------------------------------------------------------------
+* implement page-up and page-down from the menu
+* implement a goto location function
+* draw a better icon
+* accept a file on the command line
+* accept a file via drag-and drop
+* integrate with the shell to appear on the context menu
+* display the file name on the window frame
+* respond to mouse moves by displaying the position under the pointer
+* respond to mouse moves by hilighting the hex and character on screen
+* enable decoding as Unicode
+* enable displaying text files with proper pagination
+* create a search by character function
+* create a search by text function
 
-/////////////////////////////////////////////////////////////////////////////
-Other standard files:
-
-StdAfx.h, StdAfx.cpp
-    These files are used to build a precompiled header (PCH) file
-    named morew.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
-
-/////////////////////////////////////////////////////////////////////////////
+Known Bugs
+-------------------------------------------------------------------------------
+* page-up and page-down move more than one page
+* opening a new file does not reset the scrollbar to the top of page

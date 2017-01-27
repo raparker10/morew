@@ -23,7 +23,7 @@
 
 
 // TODO: reference additional headers your program requires here
-#include "CFileLengthToSizeHelper.h"
+#include "CDrawingHelper.h"
 #include "CFileBuffer.h"
 #include "CMoreScreenLayout.h"
 #include "CCanvas.h"
